@@ -56,6 +56,11 @@ courses=(
 check_mount() {
     # Return 0 if mount exists 1 if not exists
     [ -d $1 ] && return 1 || return 0;
+
+    # here it is checking for dir existence
+    # which we are deleting while unmounting
+    # to check bind mount we can check for 
+    # no of hard links > 1
 }
 
 # function to check if course exists
