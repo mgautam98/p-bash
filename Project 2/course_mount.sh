@@ -2,25 +2,35 @@
 ################################################################################
 #                              course_mount.sh
 # 
-# Script for mounting courses with permissions for specific users
+# Script for mounting course data with permissions to specific users
 # and groups                                                                   
-# 
-# Dependemcy: User 'trainee', Group 'ftpaccess', bindfs
 # 
 # Change History
 # 08/06/2021  Gautam Mishra     Initial Implementation
 #                               
+# Dependemcy: User 'trainee', Group 'ftpaccess', bindfs
 # 
+# user_allow_other in /etc/fuse.conf else use with SUDO
+#
 # 
 ################################################################################
 ################################################################################
 ################################################################################
-
-PROG_NAME=$0
+#
+#   example usage:
+#   ./course_mount.sh -m -c Linux_course1
+#   ./course_mount.sh -u
+#
+################################################################################
+################################################################################
 
 # can be changed acc to need
 DATA_DIR='./courses'
 TRAINEE_DIR='./trainee'
+
+COURSE_PATH=""
+
+PROG_NAME=$0
 
 # function for usage
 usage() {
@@ -53,7 +63,11 @@ check_course() {
     # return if course not exits
     for i in ${courses[@]}
     do
-        [[ $i == $1 ]] && return 0
+        if [[ ${i##*/} == $1 ]]
+        then
+            COURSE_PATH=$DATA_DIR/$i
+            return 0
+        fi
     done
     echo "Course does not exists"
     exit 2
@@ -75,7 +89,7 @@ mount_course() {
     
     # Set permissions
     # Mount the source to target
-    bindfs -p 550 -u trainee -g ftpaccess $DATA_DIR/$1 $TRAINEE_DIR/$1
+    bindfs -p 550 -u trainee -g ftpaccess $COURSE_PATH $TRAINEE_DIR/$1
 }
 
 # function to mount all courses
@@ -84,7 +98,7 @@ mount_all() {
     # call mount_course
     for i in ${courses[@]}
     do
-        mount_course $i
+        mount_course ${i##*/}
     done
 }
 
@@ -99,7 +113,6 @@ unmount_course() {
     mounted=$?
     [ $mounted -eq 0 ] && return 1    # TODO: display to user if not mounted
 
-
     # If mount exists unmount and delete directory in target folder
     umount $TRAINEE_DIR/$1
 
@@ -113,7 +126,7 @@ unmount_all() {
     # call unmount_course
     for i in ${courses[@]}
     do
-        unmount_course $i
+        unmount_course ${i##*/}
     done
 }
 

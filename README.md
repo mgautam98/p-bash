@@ -1,7 +1,5 @@
 # Bash Project
 
-
-
 ```bash
 ├── Project 1
 │   ├── 10.sh
@@ -15,18 +13,21 @@
 │   ├── 7.sh
 │   ├── 8.sh
 │   ├── 9.sh
+│   ├── access.log
 │   └── utility.txt
 ├── Project 2
 │   ├── course_mount.sh
-│   └── courses
-│       ├── Linux_course
-│       │   ├── Linux_course1
-│       │   └── Linux_course2
-│       ├── machinelearning
-│       │   ├── machinelearning1
-│       │   └── machinelearning2
-│       ├── SQLFundamentals1
-│       ├── SQLFundamentals2
-│       └── SQLFundamentals3
+│   ├── courses
+│   │   ├── Linux_course
+│   │   │   ├── Linux_course1
+│   │   │   └── Linux_course2
+│   │   ├── machinelearning
+│   │   │   ├── machinelearning1
+│   │   │   └── machinelearning2
+│   │   ├── SQLFundamentals1
+│   │   ├── SQLFundamentals2
+│   │   └── SQLFundamentals3
+│   └── trainee
 └── README.md
+
 ```
