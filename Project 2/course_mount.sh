@@ -9,8 +9,7 @@
 # 
 # Change History
 # 08/06/2021  Gautam Mishra     Initial Implementation
-#                               new Bash shell scripts.
-#                               Add new history entries as needed.
+#                               
 # 
 # 
 ################################################################################
@@ -148,18 +147,18 @@ done
 
 if [[ $TO_MOUNT -eq 1 ]]                # if -m flag
 then
-    if [[ $COURSE == "" ]]              # -c arg not given
+    if [[ $COURSE == "" ]]              # -c arg not provided
     then
         mount_all
-    else                                # -c arg given
+    else                                # -c arg provided
         mount_course $COURSE 
     fi
 elif [[ $TO_MOUNT -eq 0 ]]              # if -u flag
 then
-    if [[ $COURSE == "" ]]              # -c arg not given
+    if [[ $COURSE == "" ]]              # -c arg not provided
     then
         unmount_all
-    else                                # -c arg given
+    else                                # -c arg provided
         unmount_course $COURSE 
     fi
 else 
