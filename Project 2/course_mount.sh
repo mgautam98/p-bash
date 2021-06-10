@@ -64,7 +64,8 @@ check_course() {
     # return if course not exits
     for LISTED_COURSE in ${courses[@]}
     do
-        if [[ ${LISTED_COURSE##*/} == $1 ]]
+        COURSE_BASE=`basename $LISTED_COURSE`
+        if [[ $COURSE_BASE == $1 ]]
         then
             COURSE_PATH=$DATA_DIR/$LISTED_COURSE
             return 0
@@ -101,7 +102,8 @@ mount_all() {
     # call mount_course
     for LISTED_COURSE in ${courses[@]}
     do
-        mount_course ${LISTED_COURSE##*/}
+        COURSE_BASE=`basename $LISTED_COURSE`
+        mount_course $COURSE_BASE
     done
 }
 
@@ -131,7 +133,8 @@ unmount_all() {
     # call unmount_course
     for LISTED_COURSE in ${courses[@]}
     do
-        unmount_course ${LISTED_COURSE##*/}
+        COURSE_BASE=`basename $LISTED_COURSE`
+        unmount_course $COURSE_BASE
     done
 }
 
