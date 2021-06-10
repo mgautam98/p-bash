@@ -52,7 +52,7 @@ courses=(
     "SQLFundamentals3"
 )
 
-#function to check mount exists
+# function to check mount exists
 check_mount() {
     # Return 0 if mount exists 1 if not exists
     [ -d $1 ] && return 1 || return 0;
@@ -66,11 +66,11 @@ check_mount() {
 # function to check if course exists
 check_course() {
     # return if course not exits
-    for i in ${courses[@]}
+    for LISTED_COURSE in ${courses[@]}
     do
-        if [[ ${i##*/} == $1 ]]
+        if [[ ${LISTED_COURSE##*/} == $1 ]]
         then
-            COURSE_PATH=$DATA_DIR/$i
+            COURSE_PATH=$DATA_DIR/$LISTED_COURSE
             return 0
         fi
     done
@@ -78,7 +78,7 @@ check_course() {
     exit 2
 } 
 
-#function for mount a course
+# function for mount a course
 mount_course() {
     # echo Mounting $1
     # Check if the given course exists in course array
@@ -101,9 +101,9 @@ mount_course() {
 mount_all() {
     # Loop through courses array
     # call mount_course
-    for i in ${courses[@]}
+    for LISTED_COURSE in ${courses[@]}
     do
-        mount_course ${i##*/}
+        mount_course ${LISTED_COURSE##*/}
     done
 }
 
@@ -129,9 +129,9 @@ unmount_course() {
 unmount_all() {
     # Loop through courses array
     # call unmount_course
-    for i in ${courses[@]}
+    for LISTED_COURSE in ${courses[@]}
     do
-        unmount_course ${i##*/}
+        unmount_course ${LISTED_COURSE##*/}
     done
 }
 
