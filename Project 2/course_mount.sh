@@ -39,7 +39,7 @@ usage() {
     echo "$PROG_NAME  -m  -c [course] For mounting a given course"
     echo "$PROG_NAME  -u  -c [course] For unmounting a given course"
     echo "If course name is ommited all courses will be (un)mounted"
-    exit 1
+    exit $1 # put it outside of usage
 }
 
 courses=(
@@ -55,12 +55,8 @@ courses=(
 # function to check mount exists
 check_mount() {
     # Return 0 if mount exists 1 if not exists
-    [ -d $1 ] && return 1 || return 0;
 
-    # here it is checking for dir existence
-    # which we are deleting while unmounting
-    # to check bind mount we can check for 
-    # no of hard links > 1
+    [ `findmnt | grep "$1" | grep -c bindfs` ] && return 0 || return 1
 }
 
 # function to check if course exists
@@ -94,7 +90,9 @@ mount_course() {
     
     # Set permissions
     # Mount the source to target
-    bindfs -p 550 -u trainee -g ftpaccess $COURSE_PATH $TRAINEE_DIR/$1
+    bindfs -p 550 -u trainee -g ftpaccess $COURSE_PATH $TRAINEE_DIR/$1 2>> /dev/null
+
+    [ $? -ne 0 ] && echo "Mount unsucessful for $1\n" && return 1
 }
 
 # function to mount all courses
@@ -112,17 +110,19 @@ unmount_course() {
     # echo Umounting $1
     # check if course exits
     check_course $1
-
+    
     # Check if mount exists
     check_mount $TRAINEE_DIR/$1
     mounted=$?
-    [ $mounted -eq 0 ] && return 1    # TODO: display to user if not mounted
+    [ $mounted -ne 0 ] && return 1  
 
     # If mount exists unmount and delete directory in target folder
-    umount $TRAINEE_DIR/$1
+    umount $TRAINEE_DIR/$1 2>> /dev/null
+
+    [ $? -ne 0 ] && echo "Unmount unsucessful for $1" && return 1
 
     # delete target dir
-    rm -r $TRAINEE_DIR/$1
+    rm -r $TRAINEE_DIR/$1 2>> /dev/null
 }
 
 # function for unmount all courses
@@ -142,25 +142,25 @@ while getopts humc: flag
 do
     case "${flag}" in
         # for -h flag display usage
-        h)  usage
+        h)  usage 0
         ;;
         # if -u flag set TO_MOUNT, if already set to 1 then return
-        u) [ $TO_MOUNT -ne -1 ] && usage; TO_MOUNT=0
+        u) [ $TO_MOUNT -ne -1 ] && usage 2; TO_MOUNT=0
         ;;
         # if -m flag set TO_MOUNT, if already set to 0 then return
-        m) [ $TO_MOUNT -ne -1 ] && usage; TO_MOUNT=1
+        m) [ $TO_MOUNT -ne -1 ] && usage 2; TO_MOUNT=1
         ;;
         # if -m flag then get arg: course
         c) COURSE=${OPTARG}
         ;;
         # if any illegal flag then display usage
-        *) usage 
+        *) usage 2
         ;;
     esac
 done
 
 # if no flag then display usage
-[ -z $1 ] && { usage; }
+[ -z $1 ] && { usage 2; }
 
 
 if [[ $TO_MOUNT -eq 1 ]]                # if -m flag
@@ -180,5 +180,5 @@ then
         unmount_course $COURSE 
     fi
 else 
-    usage                               # if TO_MOUNT=-1 then display usage
+    usage 2                              # if TO_MOUNT=-1 then display usage
 fi
