@@ -40,6 +40,7 @@ usage() {
     echo "$PROG_NAME  -u  -c [course] For unmounting a given course"
     echo "If course name is ommited all courses will be (un)mounted"
     exit $1
+}
 
 courses=(
     "Linux_course/Linux_course1"
